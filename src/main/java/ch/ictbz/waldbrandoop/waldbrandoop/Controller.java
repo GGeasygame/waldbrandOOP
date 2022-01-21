@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Circle;
 
 public class Controller {
     @FXML
@@ -22,13 +23,14 @@ public class Controller {
         Forest forest = new Forest(Integer.parseInt(forestWidthTextField.getText()), Integer.parseInt(forestDepthTextField.getText()));
         arrayToGridPane(forest.returnForestArray(), forestGridPane);
 
+
+
     }
 
-    private void arrayToGridPane(Object[][] arr, GridPane gp) {
-        growthTextField.setText(arr[0][0].toString());
+    private void arrayToGridPane(ForestComponent[][] arr, GridPane gp) {
         for(int i = 0 ; i < arr.length; i++) {
             for(int j = 0; j < arr[i].length; j++) {
-                gp.add(arr[i][j].getComponent(), j, i);
+                gp.add(arr[i][j].component, j, i, 1, 1);
             }
         }
     }

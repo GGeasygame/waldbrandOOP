@@ -1,17 +1,19 @@
 package ch.ictbz.waldbrandoop.waldbrandoop;
 
+import javafx.scene.shape.Circle;
+
 import java.util.Random;
 
 public class Forest {
     public int width;
     public int depth;
     private final int treePercentage = 70;
-    private Object[][] forestArray;
+    private ForestComponent[][] forestArray;
 
     public Forest(int width, int depth) {
         this.width = width;
         this.depth = depth;
-        forestArray = new Object[width][depth];
+        forestArray = new ForestComponent[width][depth];
 
         for(int i = 0; i < forestArray.length; i++) {
             for(int j = 0; j < forestArray[i].length; j++) {
@@ -26,7 +28,7 @@ public class Forest {
         }
     }
 
-    public Object[][] returnForestArray() { return forestArray; }
+    public ForestComponent[][] returnForestArray() { return forestArray; }
 
 
 }
