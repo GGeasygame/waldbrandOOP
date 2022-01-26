@@ -1,5 +1,6 @@
 package ch.ictbz.waldbrandoop.waldbrandoop;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -10,7 +11,7 @@ import java.util.*;
 /*
 Developer Note:
 Bugs to fix:
-- Humus not showing colour on gp but humus exists
+- Humus not showing on gp but humus exists
 - Same with newly grown trees
  */
 
@@ -34,25 +35,29 @@ public class Controller {
         ForestComponent[][] forestArray = forest.getForestArray();
         arrayToGridPane(forestArray, forestGridPane);
         Timer timer = new Timer();
-        timer.schedule(new forestFireTimer(forest, forestArray), 200, INTERVAL);
+        timer.schedule(new forestFireTimer(forestArray, forestGridPane), 200, INTERVAL);
     }
 
     class forestFireTimer extends TimerTask {
-        private Forest forest;
-        private ForestComponent[][] forestArray;
+        private final ForestComponent[][] forestArray;
+        private final GridPane gp;
 
-        forestFireTimer(Forest forest, ForestComponent[][] forestArray) {
-            this.forest = forest;
+        forestFireTimer(ForestComponent[][] forestArray, GridPane gp) {
+            this.gp = gp;
             this.forestArray = forestArray;
         }
-
+        @Override
         public void run() {
-            // using this order so there's always a step difference between the processes
-            humusToNewTree(forestArray);
-            ashesToHumus(forestArray);
-            turnToAshes(forestArray);
-            spreadFire(forestArray);
-            sparkFire(forestArray);
+            Platform.runLater(() -> {
+                // using this order so there's always a step difference between the processes
+                humusToNewTree(forestArray);
+                updateGridPane(forestArray, forestGridPane);
+                ashesToHumus(forestArray);
+                updateGridPane(forestArray, forestGridPane);
+                turnToAshes(forestArray);
+                spreadFire(forestArray);
+                sparkFire(forestArray);
+            });
         }
     }
 
@@ -63,6 +68,11 @@ public class Controller {
                 gp.add(arr[x][y].component, x, y);
             }
         }
+    }
+
+    private void updateGridPane(ForestComponent[][] arr, GridPane gp) {
+        gp.getChildren().clear();
+        arrayToGridPane(arr, gp);
     }
 
     private void sparkFire(ForestComponent[][] forestArray) {

@@ -7,7 +7,7 @@ public class Humus extends  ForestComponent {
     public static String colourHex;
 
     public Humus() {
-        colourHex = "#dff026";
+        colourHex = "#421e11";
         Color color = Color.web(colourHex);
         component.setFill(color);
     }

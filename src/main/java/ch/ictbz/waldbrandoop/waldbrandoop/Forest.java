@@ -7,7 +7,7 @@ import java.util.Random;
 public class Forest {
     public int width;
     public int depth;
-    private final int treePercentage = 80;
+    private final int treePercentage = 80;      // Change this value for a different tree/stone-ratio (% trees)
     private ForestComponent[][] forestArray;
 
     public Forest(int width, int depth) {
