@@ -59,7 +59,7 @@ public class Controller {
         // Going through every element in the array and adding it to the GridPane
         for (int x = 0; x < arr.length; x++) {
             for (int y = 0; y < arr[x].length; y++) {
-                gp.add(arr[x][y].component, x, y, 1, 1);
+                gp.add(arr[x][y].component, x, y);
             }
         }
     }
