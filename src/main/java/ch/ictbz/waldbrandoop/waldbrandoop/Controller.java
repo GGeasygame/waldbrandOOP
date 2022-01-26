@@ -47,6 +47,7 @@ public class Controller {
         }
 
         public void run() {
+            // using this order so there's always a step difference between the processes
             humusToNewTree(forestArray);
             ashesToHumus(forestArray);
             turnToAshes(forestArray);
