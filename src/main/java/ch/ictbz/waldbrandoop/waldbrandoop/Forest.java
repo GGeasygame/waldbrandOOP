@@ -7,7 +7,7 @@ import java.util.Random;
 public class Forest {
     public int width;
     public int depth;
-    private final int treePercentage = 100;
+    private final int treePercentage = 80;
     private ForestComponent[][] forestArray;
 
     public Forest(int width, int depth) {
@@ -16,14 +16,14 @@ public class Forest {
         forestArray = new ForestComponent[width][depth];
 
 
-        for(int i = 0; i < forestArray.length; i++) {
-            for(int j = 0; j < forestArray[i].length; j++) {
+        for(int x = 0; x < forestArray.length; x++) {
+            for(int y = 0; y < forestArray[x].length; y++) {
                 Random rnd = new Random();
                 int rndNumber = rnd.nextInt(100);
                 if (rndNumber < treePercentage) {
-                    forestArray[i][j] = new Tree();
+                    forestArray[x][y] = new Tree();
                 } else {
-                    forestArray[i][j] = new Rock();
+                    forestArray[x][y] = new Rock();
                 }
             }
         }
@@ -31,4 +31,22 @@ public class Forest {
 
     public ForestComponent[][] getForestArray() { return forestArray; }
 
+    public static ForestComponent[] getNeighbours(ForestComponent[][] forestArray, int x, int y) {
+        // get neighbouring forestComponents and check for borders
+        ForestComponent[] neighbouringComponents = new ForestComponent[4];
+        // left
+        if (x != 0)
+            neighbouringComponents[0] = forestArray[x - 1][y];
+        // bottom
+        if (y != forestArray[x].length - 1)
+            neighbouringComponents[1] = forestArray[x][y + 1];
+        // right
+        if (x != forestArray.length - 1)
+            neighbouringComponents[2] = forestArray[x + 1][y];
+        // top
+        if (y != 0)
+            neighbouringComponents[3] = forestArray[x][y - 1];
+
+        return neighbouringComponents;
+    }
 }

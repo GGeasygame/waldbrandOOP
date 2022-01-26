@@ -1,17 +1,17 @@
 package ch.ictbz.waldbrandoop.waldbrandoop;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /*
 Developer Note:
 Bugs to fix:
-- Fire is not spreading correctly
+- Humus not showing colour on gp but humus exists
+- Same with newly grown trees
  */
 
 
@@ -27,7 +27,7 @@ public class Controller {
     @FXML
     private TextField sparkTextField;
 
-    private final int INTERVAL = 1000; // Set interval at which fire spreads
+    private final int INTERVAL = 2000; // Set interval at which fire spreads
 
     public void onButtonStartSimulation() {
         Forest forest = new Forest(Integer.parseInt(forestWidthTextField.getText()), Integer.parseInt(forestDepthTextField.getText()));
@@ -35,26 +35,31 @@ public class Controller {
         arrayToGridPane(forestArray, forestGridPane);
         Timer timer = new Timer();
         timer.schedule(new forestFireTimer(forest, forestArray), 200, INTERVAL);
-
     }
+
     class forestFireTimer extends TimerTask {
         private Forest forest;
         private ForestComponent[][] forestArray;
+
         forestFireTimer(Forest forest, ForestComponent[][] forestArray) {
             this.forest = forest;
             this.forestArray = forestArray;
         }
+
         public void run() {
-            sparkFire(forestArray);
+            humusToNewTree(forestArray);
+            ashesToHumus(forestArray);
+            turnToAshes(forestArray);
             spreadFire(forestArray);
+            sparkFire(forestArray);
         }
     }
 
     private void arrayToGridPane(ForestComponent[][] arr, GridPane gp) {
         // Going through every element in the array and adding it to the GridPane
-        for(int i = 0 ; i < arr.length; i++) {
-            for(int j = 0; j < arr[i].length; j++) {
-                gp.add(arr[i][j].component, i, j, 1, 1);
+        for (int x = 0; x < arr.length; x++) {
+            for (int y = 0; y < arr[x].length; y++) {
+                gp.add(arr[x][y].component, x, y, 1, 1);
             }
         }
     }
@@ -65,7 +70,7 @@ public class Controller {
         for (ForestComponent[] forestComponents : forestArray) {
             for (ForestComponent forestComponent : forestComponents) {
                 if (rnd.nextInt(100) < Integer.parseInt(sparkTextField.getText())
-                        && forestComponent instanceof Tree && !(((Tree) forestComponent).isBurning)) {
+                        && forestComponent instanceof Tree && !(((Tree) forestComponent).isBurning) && !(((Tree) forestComponent).isAsh)) {
                     ((Tree) forestComponent).sparkFire();
                 }
             }
@@ -73,33 +78,73 @@ public class Controller {
     }
 
     private void spreadFire(ForestComponent[][] forestArray) {
-        for(int i = 0; i < forestArray.length; i++) {
-            for(int j = 0; j <forestArray[i].length; j++) {
-                ForestComponent subjectComponent = forestArray[i][j];
-                // check if burning Tree
-                if (!(subjectComponent instanceof Tree) || !(((Tree) subjectComponent).isBurning)) break;
+        // First putting trees in ArrayList and then burning so trees that just got burned can't
+        // burn neighbouring trees during the same tick (because of for-loop)
 
-                // get neighbouring forestComponents
-                ForestComponent[] neighbouringComponents = new ForestComponent[4];
-                // top
-                if (i != 0)
-                    neighbouringComponents[0] = forestArray[i-1][j];
-                // right
-                if (j != forestArray[i].length-1)
-                    neighbouringComponents[1] = forestArray[i][j+1];
-                // bottom
-                if (i != forestArray.length-1)
-                    neighbouringComponents[2] = forestArray[i+1][j];
-                // left
-                if (j != 0)
-                    neighbouringComponents[3] = forestArray[i][j-1];
+        ArrayList<Tree> treesToSetOnFire = new ArrayList<>();
+
+        for (int x = 0; x < forestArray.length; x++) {
+            for (int y = 0; y < forestArray[x].length; y++) {
+                ForestComponent subjectComponent = forestArray[x][y];
+                // check if burning Tree
+                if (!(subjectComponent instanceof Tree) || !(((Tree) subjectComponent).isBurning)) continue;
+
+                ForestComponent[] neighbouringComponents = Forest.getNeighbours(forestArray, x, y);
 
                 // Cycle through components and set non-burning trees on fire
                 for (ForestComponent neighbouringComponent : neighbouringComponents) {
-                    if (neighbouringComponent instanceof Tree && !(((Tree) neighbouringComponent).isBurning)) {
-                        ((Tree) neighbouringComponent).sparkFire();
+                    if (neighbouringComponent instanceof Tree && !(((Tree) neighbouringComponent).isBurning) && !(((Tree) neighbouringComponent).isAsh)) {
+                        treesToSetOnFire.add((Tree) neighbouringComponent);
                     }
                 }
+            }
+        }
+        for (Tree tree : treesToSetOnFire) {
+            tree.sparkFire();
+        }
+    }
+
+    private void turnToAshes(ForestComponent[][] forestArray) {
+        for (int x = 0; x < forestArray.length; x++) {
+            for (int y = 0; y < forestArray[x].length; y++) {
+                // Check if neither tree nor burning
+                if (!(forestArray[x][y] instanceof Tree) || !(((Tree) forestArray[x][y]).isBurning)) continue;
+
+                boolean willTurnToAsh = true;
+                // Check if neighbours are all burnt, if yes proceed to turning tree into ashes
+                ForestComponent[] neighbours = Forest.getNeighbours(forestArray, x, y);
+                for (ForestComponent neighbour : neighbours) {
+                    if (!(neighbour instanceof Tree)) continue;
+                    if (!(((Tree) neighbour).isBurning) && !(((Tree) neighbour).isAsh)) {
+                        willTurnToAsh = false;
+                        break;
+                    }
+                }
+                if (willTurnToAsh)
+                    ((Tree) forestArray[x][y]).turnToAsh();
+            }
+        }
+    }
+
+    private void ashesToHumus(ForestComponent[][] forestArray) {
+        for (int x = 0; x < forestArray.length; x++) {
+            for (int y = 0; y < forestArray[x].length; y++) {
+                if (!(forestArray[x][y] instanceof Tree) || !(((Tree) forestArray[x][y]).isAsh)) continue;
+
+                forestArray[x][y] = new Humus();
+            }
+        }
+    }
+
+    private void humusToNewTree(ForestComponent[][] forestArray) {
+        for (int x = 0; x < forestArray.length; x++) {
+            for (int y = 0; y < forestArray[x].length; y++) {
+                if (!(forestArray[x][y] instanceof Humus)) continue;
+
+                // Make sure only a percentage of the humus turns into trees
+                Random rnd = new Random();
+                if (rnd.nextInt(100) < Integer.parseInt(growthTextField.getText()))
+                    forestArray[x][y] = new Tree();
             }
         }
     }
