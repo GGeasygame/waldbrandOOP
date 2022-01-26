@@ -7,7 +7,7 @@ import java.util.Random;
 public class Forest {
     public int width;
     public int depth;
-    private final int treePercentage = 70;
+    private final int treePercentage = 100;
     private ForestComponent[][] forestArray;
 
     public Forest(int width, int depth) {
@@ -15,11 +15,12 @@ public class Forest {
         this.depth = depth;
         forestArray = new ForestComponent[width][depth];
 
+
         for(int i = 0; i < forestArray.length; i++) {
             for(int j = 0; j < forestArray[i].length; j++) {
                 Random rnd = new Random();
-                int rndNumber = rnd.nextInt(101);
-                if (rndNumber < 70) {
+                int rndNumber = rnd.nextInt(100);
+                if (rndNumber < treePercentage) {
                     forestArray[i][j] = new Tree();
                 } else {
                     forestArray[i][j] = new Rock();
@@ -28,7 +29,6 @@ public class Forest {
         }
     }
 
-    public ForestComponent[][] returnForestArray() { return forestArray; }
-
+    public ForestComponent[][] getForestArray() { return forestArray; }
 
 }
