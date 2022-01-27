@@ -2,19 +2,9 @@ package ch.ictbz.waldbrandoop.waldbrandoop;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-
 import java.util.*;
-
-/*
-Developer Note:
-Bugs to fix:
-- Humus not showing on gp but humus exists
-- Same with newly grown trees
- */
-
 
 public class Controller {
     @FXML
@@ -71,6 +61,7 @@ public class Controller {
     }
 
     private void updateGridPane(ForestComponent[][] arr, GridPane gp) {
+        // clear all children of the GridPane and then newly assign them from the forest-array.
         gp.getChildren().clear();
         arrayToGridPane(arr, gp);
     }
@@ -110,6 +101,7 @@ public class Controller {
                 }
             }
         }
+        // Set all previously selected trees on fire
         for (Tree tree : treesToSetOnFire) {
             tree.sparkFire();
         }
@@ -138,6 +130,7 @@ public class Controller {
     }
 
     private void ashesToHumus(ForestComponent[][] forestArray) {
+        // loop through all ForestComponents and turn the ones that are Trees and are ash to humus.
         for (int x = 0; x < forestArray.length; x++) {
             for (int y = 0; y < forestArray[x].length; y++) {
                 if (!(forestArray[x][y] instanceof Tree) || !(((Tree) forestArray[x][y]).isAsh)) continue;
@@ -148,6 +141,7 @@ public class Controller {
     }
 
     private void humusToNewTree(ForestComponent[][] forestArray) {
+        // loop through all ForestComponents and turn a percentile of the Humus to Trees.
         for (int x = 0; x < forestArray.length; x++) {
             for (int y = 0; y < forestArray[x].length; y++) {
                 if (!(forestArray[x][y] instanceof Humus)) continue;

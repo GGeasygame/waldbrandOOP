@@ -1,7 +1,5 @@
 package ch.ictbz.waldbrandoop.waldbrandoop;
 
-import javafx.scene.shape.Circle;
-
 import java.util.Random;
 
 public class Forest {
@@ -15,7 +13,7 @@ public class Forest {
         this.depth = depth;
         forestArray = new ForestComponent[width][depth];
 
-
+        // loop through the array and assign every index to either a tree or a stone.
         for(int x = 0; x < forestArray.length; x++) {
             for(int y = 0; y < forestArray[x].length; y++) {
                 Random rnd = new Random();
