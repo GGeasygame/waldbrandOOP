@@ -45,8 +45,10 @@ public class Controller {
                 ashesToHumus(forestArray);
                 updateGridPane(forestArray, forestGridPane);
                 turnToAshes(forestArray);
+                updateGridPane(forestArray, forestGridPane);
                 spreadFire(forestArray);
                 sparkFire(forestArray);
+                updateGridPane(forestArray, forestGridPane);
             });
         }
     }
@@ -55,7 +57,7 @@ public class Controller {
         // Going through every element in the array and adding it to the GridPane
         for (int x = 0; x < arr.length; x++) {
             for (int y = 0; y < arr[x].length; y++) {
-                gp.add(arr[x][y].component, x, y);
+                gp.add(arr[x][y].imageView, x, y);
             }
         }
     }
@@ -63,7 +65,17 @@ public class Controller {
     private void updateGridPane(ForestComponent[][] arr, GridPane gp) {
         // clear all children of the GridPane and then newly assign them from the forest-array.
         gp.getChildren().clear();
+        createImageViews(arr);
         arrayToGridPane(arr, gp);
+
+    }
+
+    private void createImageViews(ForestComponent[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                arr[i][j].createImageView();
+            }
+        }
     }
 
     private void sparkFire(ForestComponent[][] forestArray) {
