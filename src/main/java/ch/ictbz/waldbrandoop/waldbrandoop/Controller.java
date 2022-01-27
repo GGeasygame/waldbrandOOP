@@ -45,8 +45,10 @@ public class Controller {
                 ashesToHumus(forestArray);
                 updateGridPane(forestArray, forestGridPane);
                 turnToAshes(forestArray);
+                updateGridPane(forestArray, forestGridPane);
                 spreadFire(forestArray);
                 sparkFire(forestArray);
+                updateGridPane(forestArray, forestGridPane);
             });
         }
     }

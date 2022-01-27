@@ -7,9 +7,13 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class ForestComponent {
-    private final int RADIUS = 5;
     protected String component = "";
     public ImageView imageView = new ImageView();
+
+    public ForestComponent() {
+        imageView.setFitWidth(50);
+        imageView.setFitHeight(50);
+    }
 
     public ImageView getComponent() {
         return imageView;
@@ -20,8 +24,6 @@ public class ForestComponent {
             InputStream stream = new FileInputStream(component);
             Image image = new Image(stream);
             imageView.setImage(image);
-            imageView.setFitWidth(30);
-            imageView.setFitHeight(30);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText(e.getMessage());
