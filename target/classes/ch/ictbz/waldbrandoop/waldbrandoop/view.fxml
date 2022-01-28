@@ -52,7 +52,7 @@
       <TextField fx:id="healthyTextField" editable="false" layoutX="61.0" layoutY="246.0" prefHeight="26.0" prefWidth="34.0" />
       <TextField fx:id="rockTextField" editable="false" layoutX="256.0" layoutY="187.0" prefHeight="20.0" prefWidth="34.0" />
       <Label layoutX="204.0" layoutY="193.0" text="Rock [%]:" />
-      <Label layoutX="16.0" layoutY="165.0" text="Komponente" />
+      <Label layoutX="16.0" layoutY="165.0" text="Komponenten" />
       <Line endX="470.5" layoutX="115.0" layoutY="182.0" startX="-100.0" />
       <Label layoutX="15.0" layoutY="222.0" text="Bäume" />
       <Line endX="470.5" layoutX="115.0" layoutY="239.0" startX="-100.0" />
