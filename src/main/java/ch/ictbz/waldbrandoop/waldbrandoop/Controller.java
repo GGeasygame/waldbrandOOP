@@ -18,7 +18,7 @@ public class Controller {
     @FXML
     private TextField sparkTextField;
 
-    private final int INTERVAL = 2000; // Set interval at which fire spreads
+    private final int INTERVAL = 1000; // Set interval at which fire spreads
 
     public void onButtonStartSimulation() {
         Forest forest = new Forest(Integer.parseInt(forestWidthTextField.getText()), Integer.parseInt(forestDepthTextField.getText()));
@@ -41,11 +41,8 @@ public class Controller {
             Platform.runLater(() -> {
                 // using this order so there's always a step difference between the processes
                 humusToNewTree(forestArray);
-                updateGridPane(forestArray, forestGridPane);
                 ashesToHumus(forestArray);
-                updateGridPane(forestArray, forestGridPane);
                 turnToAshes(forestArray);
-                updateGridPane(forestArray, forestGridPane);
                 spreadFire(forestArray);
                 sparkFire(forestArray);
                 updateGridPane(forestArray, forestGridPane);
