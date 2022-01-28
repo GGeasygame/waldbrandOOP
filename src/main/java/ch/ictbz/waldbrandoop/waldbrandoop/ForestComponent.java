@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 public abstract class ForestComponent {
     protected String component = "";
-    private ImageView imageView = new ImageView();
+    private final ImageView imageView = new ImageView();
 
     public ForestComponent() {
         // Change width and height of the ForestComponents

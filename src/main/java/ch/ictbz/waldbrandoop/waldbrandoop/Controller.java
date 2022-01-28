@@ -83,9 +83,9 @@ public class Controller {
     }
 
     private void createImageViews(ForestComponent[][] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[i].length; j++) {
-                arr[i][j].createImageView();
+        for (ForestComponent[] forestComponents : arr) {
+            for (ForestComponent forestComponent : forestComponents) {
+                forestComponent.createImageView();
             }
         }
     }
