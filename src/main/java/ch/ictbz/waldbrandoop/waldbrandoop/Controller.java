@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+
 import java.util.*;
 
 public class Controller {
@@ -19,13 +20,26 @@ public class Controller {
     private TextField sparkTextField;
 
     private final int INTERVAL = 1000; // Set interval at which fire spreads
+    private Timer timer = new Timer();
+    private boolean timerIsStopped = true;
 
     public void onButtonStartSimulation() {
+        if (!timerIsStopped) return;
+
         Forest forest = new Forest(Integer.parseInt(forestWidthTextField.getText()), Integer.parseInt(forestDepthTextField.getText()));
         ForestComponent[][] forestArray = forest.getForestArray();
         arrayToGridPane(forestArray, forestGridPane);
-        Timer timer = new Timer();
+
+
+        timer = new Timer();
         timer.schedule(new forestFireTimer(forestArray, forestGridPane), 200, INTERVAL);
+        timerIsStopped = false;
+    }
+
+    public void onButtonStopSimulation() {
+        timer.cancel();
+        timer.purge();
+        timerIsStopped = true;
     }
 
     class forestFireTimer extends TimerTask {
@@ -36,16 +50,17 @@ public class Controller {
             this.gp = gp;
             this.forestArray = forestArray;
         }
+
         @Override
         public void run() {
             Platform.runLater(() -> {
-                // using this order so there's always a step difference between the processes
-                humusToNewTree(forestArray);
-                ashesToHumus(forestArray);
-                turnToAshes(forestArray);
-                spreadFire(forestArray);
-                sparkFire(forestArray);
-                updateGridPane(forestArray, forestGridPane);
+                // using this order so there's always a one-step difference between the processes.
+                humusToNewTree(this.forestArray);
+                ashesToHumus(this.forestArray);
+                turnToAshes(this.forestArray);
+                spreadFire(this.forestArray);
+                sparkFire(this.forestArray);
+                updateGridPane(this.forestArray, gp);
             });
         }
     }
@@ -54,7 +69,7 @@ public class Controller {
         // Going through every element in the array and adding it to the GridPane
         for (int x = 0; x < arr.length; x++) {
             for (int y = 0; y < arr[x].length; y++) {
-                gp.add(arr[x][y].imageView, x, y);
+                gp.add(arr[x][y].getImageView(), x, y);
             }
         }
     }

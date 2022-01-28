@@ -5,7 +5,7 @@ import java.util.Random;
 public class Forest {
     public int width;
     public int depth;
-    private final int treePercentage = 80;      // Change this value for a different tree/stone-ratio (% trees)
+    private final int TREEPERCENTAGE = 80;      // Change this value for a different tree/stone-ratio (% trees)
     private ForestComponent[][] forestArray;
 
     public Forest(int width, int depth) {
@@ -18,7 +18,7 @@ public class Forest {
             for(int y = 0; y < forestArray[x].length; y++) {
                 Random rnd = new Random();
                 int rndNumber = rnd.nextInt(100);
-                if (rndNumber < treePercentage) {
+                if (rndNumber < TREEPERCENTAGE) {
                     forestArray[x][y] = new Tree();
                     forestArray[x][y].createImageView();
                 } else {

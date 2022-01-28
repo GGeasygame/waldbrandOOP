@@ -8,14 +8,15 @@ import java.io.InputStream;
 
 public class ForestComponent {
     protected String component = "";
-    public ImageView imageView = new ImageView();
+    private ImageView imageView = new ImageView();
 
     public ForestComponent() {
+        // Change width and height of the ForestComponents
         imageView.setFitWidth(50);
         imageView.setFitHeight(50);
     }
 
-    public ImageView getComponent() {
+    public ImageView getImageView() {
         return imageView;
     }
 
