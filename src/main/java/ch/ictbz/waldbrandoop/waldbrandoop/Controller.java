@@ -9,6 +9,18 @@ import java.util.*;
 
 public class Controller {
     @FXML
+    private TextField rockTextField;
+    @FXML
+    private TextField healthyTextField;
+    @FXML
+    private TextField humusPercentageTextField;
+    @FXML
+    private TextField treePercentageTextField;
+    @FXML
+    private TextField burningTextField;
+    @FXML
+    private TextField ashesTextField;
+    @FXML
     private GridPane forestGridPane;
     @FXML
     private TextField forestWidthTextField;
@@ -29,7 +41,6 @@ public class Controller {
         Forest forest = new Forest(Integer.parseInt(forestWidthTextField.getText()), Integer.parseInt(forestDepthTextField.getText()));
         ForestComponent[][] forestArray = forest.getForestArray();
         arrayToGridPane(forestArray, forestGridPane);
-
 
         timer = new Timer();
         timer.schedule(new forestFireTimer(forestArray, forestGridPane), 200, INTERVAL);
@@ -61,6 +72,7 @@ public class Controller {
                 spreadFire(this.forestArray);
                 sparkFire(this.forestArray);
                 updateGridPane(this.forestArray, gp);
+                updatePercentages(this.forestArray);
             });
         }
     }
@@ -176,5 +188,67 @@ public class Controller {
                     forestArray[x][y] = new Tree();
             }
         }
+    }
+    private void updatePercentages(ForestComponent[][] arr) {
+        humusPercentageTextField.setText(String.valueOf(getPercentage(arr, Humus.class)));
+        treePercentageTextField.setText(String.valueOf(getPercentage(arr, Tree.class)));
+        rockTextField.setText(String.valueOf(getPercentage(arr, Rock.class)));
+        healthyTextField.setText(String.valueOf(getPercentageOfTrees(arr, new Tree())));
+
+        Tree tree = new Tree();
+        tree.sparkFire();
+        burningTextField.setText(String.valueOf(getPercentageOfTrees(arr, tree)));
+        tree = new Tree();
+        tree.turnToAsh();
+        ashesTextField.setText(String.valueOf(getPercentageOfTrees(arr, tree)));
+    }
+
+    private int getPercentage(Object[][] arr, Class c) {
+        int percentage;
+
+        int size = arr.length * arr[0].length;
+        int count = 0;
+
+        for (Object[] elementArray : arr) {
+            for (Object element : elementArray) {
+                if (element.getClass().equals(c))
+                    count++;
+            }
+        }
+        percentage = (int)Math.round(count * 100 / (double)size);
+
+        return percentage;
+    }
+
+    private int getPercentageOfTrees(ForestComponent[][] arr, Tree fc) {
+        int percentage;
+
+        int count = 0;
+
+        for (ForestComponent[] components : arr) {
+            for (ForestComponent component : components) {
+                if (!(component instanceof Tree)) continue;
+                if (((Tree) component).isBurning == fc.isBurning && ((Tree) component).isAsh == fc.isAsh)
+                    count++;
+            }
+        }
+
+        int count2 = 0;
+        for (ForestComponent[] components : arr) {
+            for (ForestComponent component : components) {
+                if (component instanceof Tree)
+                    count2++;
+            }
+        }
+
+        percentage = (int)Math.round(count * 100 / (double)count2);
+
+        return percentage;
+    }
+    public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+            }
+        }));
     }
 }
