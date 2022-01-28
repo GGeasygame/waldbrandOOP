@@ -19,7 +19,7 @@ public class Controller {
     @FXML
     private TextField sparkTextField;
 
-    private final int INTERVAL = 1000; // Set interval at which fire spreads
+    private final int INTERVAL = 1000; // Set interval for the timer
     private Timer timer = new Timer();
     private boolean timerIsStopped = true;
 

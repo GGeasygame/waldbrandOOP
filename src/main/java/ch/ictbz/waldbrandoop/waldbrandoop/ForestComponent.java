@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-public class ForestComponent {
+public abstract class ForestComponent {
     protected String component = "";
     private ImageView imageView = new ImageView();
 

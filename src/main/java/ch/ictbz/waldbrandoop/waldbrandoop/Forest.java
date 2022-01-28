@@ -20,11 +20,10 @@ public class Forest {
                 int rndNumber = rnd.nextInt(100);
                 if (rndNumber < TREEPERCENTAGE) {
                     forestArray[x][y] = new Tree();
-                    forestArray[x][y].createImageView();
                 } else {
                     forestArray[x][y] = new Rock();
-                    forestArray[x][y].createImageView();
                 }
+                forestArray[x][y].createImageView();
             }
         }
     }
